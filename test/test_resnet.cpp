@@ -26,8 +26,8 @@ my_infer::sftensor PreProcessImage(cv::Mat& image)
 	{
 		cv::Mat split_image = split_images[i];
 		assert(split_image.total() == input_w * input_h);
-		const cv::Mat & split_image_t = split_image.t();
-		memcpy(input->data().data() + i * split_image.total(), split_image_t.data, sizeof(float) * split_image.total());
+		const cv::Mat& split_image_t = split_image.t();
+		memcpy(input->raw_ptr() + i * split_image.total(), split_image_t.data, sizeof(float) * split_image.total());
 	}
 	//input->write_tensor("input.txt");
 

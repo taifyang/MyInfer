@@ -374,7 +374,6 @@ namespace my_infer
 
 	float* Tensor<float>::raw_ptr() 
 	{
-		CHECK(!this->data_.size());
 		return this->data_.data();
 	}
 
