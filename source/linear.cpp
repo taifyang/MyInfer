@@ -56,7 +56,7 @@ namespace my_infer
 
 		uint32_t batch = inputs.size();
 		const std::shared_ptr<Tensor<float>>& weight = weights_.front();
-		Eigen::MatrixXf weight_mat = Eigen::Map<Eigen::MatrixXf>(weight->data().data(), out_features_, in_features_); //1000*512
+		Eigen::MatrixXf weight_mat = Eigen::Map<Eigen::MatrixXf>(weight->raw_ptr(), out_features_, in_features_); //1000*512
 
 #pragma omp parallel for num_threads(batch)
 		for (uint32_t i = 0; i < batch; ++i) 
@@ -64,14 +64,14 @@ namespace my_infer
 			// input matmul weight
 			const std::shared_ptr<Tensor<float>>& input = inputs.at(i); 
 			const std::vector<uint32_t>& input_shapes = input->shapes();//512 1 1
-			//CHECK(input_shapes.size() == 3 && input_shapes.front() == 1);
+			CHECK(input_shapes.size() == 3 && input_shapes.front() == 1);
 
 			const uint32_t feature_dims = input_shapes.at(1);
 			CHECK(weight_mat.rows() == out_features_);
-			//CHECK(weight_mat.cols() == feature_dims && feature_dims == in_features_); //512 512  512
+			CHECK(weight_mat.cols() == feature_dims && feature_dims == in_features_); //512 512  512
 			const uint32_t input_dim = input_shapes.at(2);
 
-			Eigen::MatrixXf col_mat = Eigen::Map<Eigen::MatrixXf>(input->data().data(), in_features_, input_dim);
+			Eigen::MatrixXf col_mat = Eigen::Map<Eigen::MatrixXf>(input->raw_ptr(), in_features_, input_dim);
 
 			std::shared_ptr<Tensor<float>> output = std::make_shared<Tensor<float>>(1, out_features_, input_dim);
 			CHECK(output->channels() == 1 && output->rows() == out_features_ && output->cols() == input_dim);
@@ -85,7 +85,7 @@ namespace my_infer
 			{
 				CHECK(!this->bias_.empty() && this->bias_.size() == 1);
 				std::shared_ptr<Tensor<float>> bias = this->bias_.front();
-				Eigen::MatrixXf bias_mat= Eigen::Map<Eigen::MatrixXf>(bias->data().data(), out_features_, 1); 
+				Eigen::MatrixXf bias_mat= Eigen::Map<Eigen::MatrixXf>(bias->raw_ptr(), out_features_, 1);
 				CHECK(bias_mat.rows() == out_features_);
 				CHECK(bias_mat.cols() == 1);
 
@@ -93,7 +93,7 @@ namespace my_infer
 				result += bias_mat;
 			}
 
-			std::copy(result.data(), result.data() + result.size(), output->data().data());
+			std::copy(result.data(), result.data() + result.size(), output->raw_ptr());
 			outputs.at(i) = output;
 		}
 

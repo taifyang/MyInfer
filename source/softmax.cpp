@@ -29,7 +29,7 @@ namespace my_infer
 
 			std::shared_ptr<Tensor<float>> output = input->Clone();
 			//const float max = *std::max_element(output_data->data().data(), output_data->data().data() + output_data->size());
-			const float sum = std::accumulate(output->data().data(), output->data().data() + output->size(), 0.0f, [](float a, float b) {return a + exp(b); });
+			const float sum = std::accumulate(output->raw_ptr(), output->raw_ptr() + output->size(), 0.0f, [](float a, float b) {return a + exp(b); });
 			for (uint32_t i = 0; i < output->size(); i++)
 			{
 				output->index(i) = std::exp(output->index(i)) / sum;

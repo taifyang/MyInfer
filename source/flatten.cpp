@@ -65,7 +65,7 @@ namespace my_infer
 			else 
 			{
 				CHECK(outputs.at(i)->shapes() == output->shapes());
-				memcpy(output->data().data(), input->data().data(), sizeof(float) * input->size());
+				memcpy(output->raw_ptr(), input->raw_ptr(), sizeof(float) * input->size());
 			}
 			if (start_dim == 0 && end_dim == 2) 
 			{
