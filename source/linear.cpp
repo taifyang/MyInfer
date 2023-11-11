@@ -73,7 +73,12 @@ namespace my_infer
 
 			Eigen::MatrixXf col_mat = Eigen::Map<Eigen::MatrixXf>(input->raw_ptr(), in_features_, input_dim);
 
-			std::shared_ptr<Tensor<float>> output = std::make_shared<Tensor<float>>(1, out_features_, input_dim);
+			std::shared_ptr<Tensor<float>> output = outputs.at(i);
+			if (output == nullptr)
+			{
+				std::shared_ptr<Tensor<float>> output = std::make_shared<Tensor<float>>(1, out_features_, input_dim);
+				outputs.at(i) = output;
+			}		
 			CHECK(output->channels() == 1 && output->rows() == out_features_ && output->cols() == input_dim);
 			const auto & output_raw_shapes = output->raw_shapes();
 			CHECK(output_raw_shapes.size() == 2);
@@ -94,7 +99,6 @@ namespace my_infer
 			}
 
 			std::copy(result.data(), result.data() + result.size(), output->raw_ptr());
-			outputs.at(i) = output;
 		}
 
 		return InferStatus::kInferSuccess;

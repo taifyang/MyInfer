@@ -7,7 +7,7 @@
 my_infer::sftensor PreProcessImage(cv::Mat& image)
 {
 	using namespace my_infer;
-	assert(!image.empty());
+	CHECK(!image.empty());
 
 	cv::resize(image, image, cv::Size(224, 224));
 	cv::cvtColor(image, image, cv::COLOR_BGR2RGB);
@@ -25,7 +25,7 @@ my_infer::sftensor PreProcessImage(cv::Mat& image)
 	for (int i = 0; i < split_images.size(); ++i)
 	{
 		cv::Mat split_image = split_images[i];
-		assert(split_image.total() == input_w * input_h);
+		CHECK(split_image.total() == input_w * input_h);
 		const cv::Mat& split_image_t = split_image.t();
 		memcpy(input->raw_ptr() + i * split_image.total(), split_image_t.data, sizeof(float) * split_image.total());
 	}
@@ -85,12 +85,12 @@ TEST(test_model, resnet_classify_demo)
 	std::vector<sftensor> outputs_softmax(batch_size);
 	SoftmaxLayer softmax_layer;
 	softmax_layer.Forward(outputs, outputs_softmax);
-	assert(outputs_softmax.size() == batch_size);
+	CHECK(outputs_softmax.size() == batch_size);
 
 	for (int i = 0; i < outputs_softmax.size(); ++i)
 	{
 		const sftensor& output_tensor = outputs_softmax.at(i);
-		assert(output_tensor->size() == 1 * 1000);
+		CHECK(output_tensor->size() == 1 * 1000);
 
 		float max_prob = -1;
 		int max_index = -1;

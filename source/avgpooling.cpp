@@ -64,7 +64,11 @@ namespace my_infer
 			CHECK(pooling_w > 0 && pooling_h > 0) << "The pooling parameter is set incorrectly. It must always be greater than 0";
 
 			std::shared_ptr<Tensor<float>> output = outputs.at(i);
-			output = std::make_shared<Tensor<float>>(input_c, output_h_, output_w_);
+			if (output == nullptr)
+			{
+				output = std::make_shared<Tensor<float>>(input_c, output_h_, output_w_);
+				outputs.at(i) = output;
+			}
 			CHECK(output->rows() == output_h_ && output->cols() == output_w_ && output->channels() == input_c) << "The output size of adaptive pooling is error";
 			
 			for (uint32_t ic = 0; ic < input_c; ++ic)
@@ -81,7 +85,6 @@ namespace my_infer
 					}
 				}
 			}
-			outputs.at(i) = output;
 			//output->write_tensor("output.txt");
 		}
 		return InferStatus::kInferSuccess;

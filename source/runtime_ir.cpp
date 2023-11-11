@@ -246,7 +246,7 @@ namespace my_infer
 			{
 				// 如果当前节点是其他待执行节点，首先使用checkready检测它是否就绪
 				std::string current_op_name = current_op->name;
-				//LOG(INFO) << current_op_name;
+				LOG(INFO) << current_op_name;
 
 				if (!CheckOperatorReady(current_op)) 
 				{

@@ -1,7 +1,7 @@
 #include <glog/logging.h>
 #include <gtest/gtest.h>
 #include "tensor.hpp"
-#include "tensor_util.hpp"
+#include "tensor_utils.hpp"
 
 TEST(test_tensor, create1)
 {

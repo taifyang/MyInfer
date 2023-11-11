@@ -1,5 +1,5 @@
 #include <stack>
-#include "tensor_util.hpp"
+#include "tensor_utils.hpp"
 #include "expression.hpp"
 #include "layer_factory.hpp"
 

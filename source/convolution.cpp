@@ -154,6 +154,7 @@ namespace my_infer
 				if (output_tensor == nullptr)
 				{
 					output_tensor = std::make_shared<Tensor<float>>(kernel_count, output_h, output_w);
+					outputs.at(i) = output_tensor;
 				}
 
 				CHECK(output_tensor->rows() == output_h && output_tensor->cols() == output_w &&
@@ -188,7 +189,6 @@ namespace my_infer
 					}
 				}	
 				//output_tensor->write("output_tensor.txt");
-				outputs.at(i) = output_tensor;
 			}
 		}
 		return InferStatus::kInferSuccess;
