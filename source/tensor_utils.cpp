@@ -1,6 +1,6 @@
 #include <glog/logging.h>
 #include "tensor.hpp"
-#include "tensor_util.hpp"
+#include "tensor_utils.hpp"
 
 
 namespace my_infer 

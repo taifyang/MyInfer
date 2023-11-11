@@ -428,11 +428,11 @@ namespace my_infer
 	//	std::fstream fout(txt, 'w');
 	//	for (uint32_t i = 0; i < this->channels(); ++i)
 	//	{
-	//		for (uint32_t j = 0; j < this->cols(); ++j)
+	//		for (uint32_t j = 0; j < this->rows(); ++j)
 	//		{
-	//			for (uint32_t k = 0; k < this->rows(); ++k)
+	//			for (uint32_t k = 0; k < this->cols(); ++k)
 	//			{
-	//				fout << std::fixed << std::setprecision(2) << this->at(i, j, k) << "\t";
+	//				fout << std::fixed << std::setprecision(3) << this->at(i, j, k) << "\t";
 	//			}
 	//			fout << std::endl;
 	//		}

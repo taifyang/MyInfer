@@ -92,7 +92,12 @@ namespace my_infer
 			const uint32_t output_h = uint32_t(std::floor((input_h - pooling_h) / stride_h_ + 1));
 			const uint32_t output_w = uint32_t(std::floor((input_w - pooling_w) / stride_w_ + 1));
 
-			std::shared_ptr<Tensor<float>> output = std::make_shared<Tensor<float>>(input_c, output_h, output_w);
+			std::shared_ptr<Tensor<float>> output = outputs.at(i);
+			if (output == nullptr)
+			{
+				output = std::make_shared<Tensor<float>>(input_c, output_h, output_w);
+				outputs.at(i) = output;
+			}
 			CHECK(output->rows() == output_h && output->cols() == output_w && output->channels() == input_c) << "The output size of max pooling layer is error";
 
 			for (uint32_t ic = 0; ic < input_c; ++ic)
@@ -108,7 +113,6 @@ namespace my_infer
 					}
 				}
 			}
-			outputs.at(i) = output;
 			//output->write_tensor("output.txt");
 		}
 		return InferStatus::kInferSuccess;

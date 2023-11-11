@@ -40,13 +40,16 @@ namespace my_infer
 		for (uint32_t i = 0; i < batch_size; ++i) 
 		{
 			const std::shared_ptr<Tensor<float>>& input = inputs.at(i);
-			std::shared_ptr<Tensor<float>> output = input->Clone();
-			for (uint32_t i = 0; i < output->size(); i++)
+			std::shared_ptr<Tensor<float>> output = outputs.at(i);
+			if (output == nullptr)
 			{
-				if (output->index(i) < 0)
-					output->index(i) = 0;
+				output = std::make_shared<Tensor<float>>(input->shapes());
+				outputs.at(i) = output;
 			}
-			outputs.at(i) = output;
+			for (uint32_t j = 0; j < output->size(); j++)
+			{
+				output->data()(j) = (input->data()(j) < 0 ? 0 : input->data()(j));
+			}
 			//output->write_tensor("output.txt");
 		}
 		return InferStatus::kInferSuccess;

@@ -27,15 +27,18 @@ namespace my_infer
 			const std::shared_ptr<Tensor<float>>& input = inputs.at(i);
 			CHECK(input != nullptr) << "The input feature map for softmax layer is empty";
 
-			std::shared_ptr<Tensor<float>> output = input->Clone();
-			//const float max = *std::max_element(output_data->data().data(), output_data->data().data() + output_data->size());
-			const float sum = std::accumulate(output->raw_ptr(), output->raw_ptr() + output->size(), 0.0f, [](float a, float b) {return a + exp(b); });
-			for (uint32_t i = 0; i < output->size(); i++)
+			std::shared_ptr<Tensor<float>> output = outputs.at(i);
+			if (output == nullptr) 
 			{
-				output->index(i) = std::exp(output->index(i)) / sum;
+				output = std::make_shared<Tensor<float>>(input->shapes());
+				outputs.at(i) = output;
+			}
+			const float sum = std::accumulate(input->raw_ptr(), input->raw_ptr() + input->size(), 0.0f, [](float a, float b) {return a + exp(b); });
+			for (uint32_t j = 0; j < output->size(); j++)
+			{
+				output->data()(j) = std::exp(input->data()(j)) / sum;
 			}
 			//output->Show();
-			outputs.at(i) = output;
 		}
 		return InferStatus::kInferSuccess;
 	}
